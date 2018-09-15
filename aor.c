@@ -1,63 +1,111 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct node {
   int data;
   struct node * left;
   struct node * right;
-  struct node * pai;
 } node;
 
-node * createtree(int value, node* esq, node* dir);
-node * insert(int value, node * tree);
+node * createtree(int value);
+void insert(int value, node * tree);
+void preordem(node * x);
+void inordem(node * x);
+void postordem(node * x);
 
 int main() {
 
   int C;
   int i = 0;
-  node * ROOT = NULL;
   scanf("%d", &C);
 
-  while (i > N) {
+  while (i < C) {
+    node * ROOT = NULL;
     int N, j = 0;
     scanf("%d", &N);
 
     while (j < N) {
       int n;
       scanf("%d", &n);
-      insert(n, ROOT);
+      if (j == 0) {
+        ROOT = createtree(n);
+      }else {
+        insert(n, ROOT);
+      }
+      j++;
     }
 
-    printf("Case %d:\n", i + 1);
-    
+    int s = i + 1;
+    printf("Case %d:\n", s);
+    printf("Pre.:");
+    preordem(ROOT);
+    printf("\n");
+    printf("In..:");
+    inordem(ROOT);
+    printf("\n");
+    printf("Post:");
+    postordem(ROOT);
+    printf("\n");
+    free(ROOT);
+    i++;
+    printf("\n");
   }
 }
 
 
-node * createtree(int value, node* esq, node* dir) {
-  node * root;
+node * createtree(int value) {
+  node * root = (node*)malloc(sizeof(node));
 
-  root = (node*)malloc(sizeof(node));
-  value = root->data;
-  esq = root->left;
-  dir = root->right;
-  root = esq->pai;
-  root = dir->pai;
+  root->data = value;
+  root->left = NULL;
+  root->right = NULL;
   return root;
 }
 
 
-node * insert(int value, node * tree) {
-
-  if (node * tree == NULL) {
-    tree = createtree(value, NULL, NULL);
-  }else {
-    if (value < tree->data) {
-      tree->left = insert(value, tree->left);
-      tree = tree->left->pai;
+void insert(int value, node * tree) {
+  if (value <= tree->data) {
+    if (tree->left == NULL) {
+      node * node = createtree(value);
+      tree->left = node;
+      return;
     }else {
-      tree->right = insert(value, tree->right);
-      tree->direita->pai = tree;
+      insert(value,  tree->left);
+    }
+  }else {
+    if (tree->right == NULL) {
+      node * node = createtree(value);
+      tree->right = node;
+      return;
+    }else {
+      insert(value, tree->right);
     }
   }
-  return tree;
+}
+
+
+void preordem(node * x) {
+  if (x != NULL) {
+    printf(" %d", x->data);
+    preordem(x->left);
+    preordem(x->right);
+  }
+}
+
+
+void inordem(node * x) {
+  if (x != NULL) {
+    inordem(x->left);
+    printf(" %d", x->data);
+    inordem(x->right);
+  }
+}
+
+
+void postordem(node * x) {
+  if (x != NULL) {
+    postordem(x->left);
+    postordem(x->right);
+    printf(" %d", x->data);
+  }
 }
